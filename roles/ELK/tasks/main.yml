@@ -1,0 +1,145 @@
+---
+# tasks file for ELK
+
+# ELASTICSEARCH TASKS (Ubuntu)
+- name: Installing ELK's Packages (Ubuntu)
+  apt:
+   name: 
+     - default-jre
+     - nginx
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Get GPG apt Key (Ubuntu)
+  apt_key:
+   url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+   state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Installing Elasticsearch Repository (Ubuntu)
+  apt_repository:
+   repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+   state: present
+   filename: "elasticsearch.list"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Installing Elasticsearch (Ubuntu)
+  apt:
+   name: elasticsearch
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+# ELASTICSEARCH TASKS (CentOS)
+- name: Installing ELK's Packages (CentOS)
+  yum:
+   name:
+     - java-11-openjdk
+     - nginx
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Get ELK GPG rpm Key (CentOS)
+  rpm_key:
+   key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+   state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Installing Elasticsearch Repository (CentOS)
+  yum_repository:
+   name: elasticsearch-7.x
+   description: Add Repository Key
+   baseurl: https://artifacts.elastic.co/packages/7.x/yum
+   gpgcheck: True
+   gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_distribution == "CentOS"
+
+- name: Installing Elasticsearch (CentOS)
+  yum:
+   name: elasticsearch
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "CentOS"  
+
+# LOGSTASH TASKS (Ubuntu)
+- name: Installing Logstash (Ubuntu)
+  apt: 
+   name: logstash
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Running Daemon-Reload Logstash (Ubuntu)
+  systemd: daemon_reload=yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Enabling Logstash Service (Ubuntu)
+  systemd:
+   name: logstash
+   enabled: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Verifying Logstash Status (Ubuntu)
+  systemd: state=started name=logstash
+  when: ansible_distribution == "Ubuntu"
+
+# LOGSTASH TASKS (CentOS)
+- name: Installing Logstash (CentOS)
+  yum:
+   name: logstash
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Running Daemon-Reload Logstash (CentOS)
+  systemd: daemon_reload=yes
+  when: ansible_distribution == "CentOS"
+
+- name: Enabling Logstash Service (CentOS)
+  systemd:
+   name: logstash
+   enabled: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Verifying Logstash Status (CentOS)
+  systemd: state=started name=logstash
+  when: ansible_distribution == "CentOS"
+
+# KIBANA TASKS (Ubuntu)
+- name: Installing Kibana (Ubuntu)
+  apt:
+   name: kibana
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Running Daemon-Reload Kibana (Ubuntu)
+  systemd: daemon_reload=yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Enabling Kibana Service (Ubuntu)
+  systemd:
+   name: kibana
+   enabled: yes
+  when: ansible_distribution == "Ubuntu"
+
+# KIBANA TASKS (CentOS)
+- name: Installing Kibana (CentOS)
+  yum:
+   name: kibana
+   state: latest
+   update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Running Daemon-Reload Kibana (CentOS)
+  systemd: daemon_reload=yes
+  when: ansible_distribution == "CentOS"
+
+- name: Enabling Kibana Service (CentOS)
+  systemd:
+   name: kibana  
+   enabled: yes
+  when: ansible_distribution == "CentOS"
+
